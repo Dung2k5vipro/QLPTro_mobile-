@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.navigation.NavigationView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigationView"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"> <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="24dp"
+        android:text="DANH MỤC QUẢN LÝ"
+        android:textColor="#0066B2"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView android:id="@+id/menuBaoCao" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:text="📊   Trang báo cáo" android:textColor="#333333" android:textSize="16sp" />
+    <TextView android:id="@+id/menuPhongTro" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:text="🏢   Quản lý phòng" android:textColor="#333333" android:textSize="16sp" />
+    <TextView android:id="@+id/menuKhachThue" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:text="👤   Quản lý khách thuê" android:textColor="#333333" android:textSize="16sp" />
+    <TextView android:id="@+id/menuHopDong" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:text="📜   Quản lý hợp đồng" android:textColor="#333333" android:textSize="16sp" />
+    <TextView android:id="@+id/menuDichVu" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:text="🛠️   Quản lý dịch vụ" android:textColor="#333333" android:textSize="16sp" />
+    <TextView android:id="@+id/menuHoaDon" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:text="💳   Quản lý hóa đơn" android:textColor="#333333" android:textSize="16sp" />
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="16dp" android:background="#E5E5E5" />
+    <TextView android:id="@+id/menuDangXuat" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:text="✕   Đăng xuất" android:textColor="#6C757D" android:textSize="16sp" />
+</LinearLayout>
+</com.google.android.material.navigation.NavigationView>

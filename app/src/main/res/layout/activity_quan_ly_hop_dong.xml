@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/layoutToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@android:color/white"
+            android:paddingTop="45dp"
+            android:paddingHorizontal="16dp">
+            <ImageView
+                android:id="@+id/imgMenu"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                app:tint="#0066B2" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Quản lý hợp đồng"
+                android:textColor="#0066B2"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutBoLocHd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutToolbar"
+            android:padding="16dp"
+            android:orientation="horizontal">
+            <Button android:id="@+id/btnFilterTatCa" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#2ECC71" android:text="Tất cả" android:textColor="@android:color/white" android:textAllCaps="false"/>
+            <Button android:id="@+id/btnFilterConHieuLuc" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_marginStart="10dp" android:backgroundTint="#E5E5E5" android:text="Còn hiệu lực" android:textColor="#333333" android:textAllCaps="false"/>
+            <Button android:id="@+id/btnFilterHetHan" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_marginStart="10dp" android:backgroundTint="#E5E5E5" android:text="Hết hạn" android:textColor="#333333" android:textAllCaps="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutFormHd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:elevation="32dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:paddingHorizontal="16dp"
+                android:background="#F8F9FA">
+                <TextView
+                    android:id="@+id/txtTieuDeFormHd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Chi tiết hợp đồng"
+                    android:textColor="#222222"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/imgDongFormHd"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    app:tint="#333333" />
+            </RelativeLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Khách thuê" android:textColor="#0066B2" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <Spinner android:id="@+id/spFormKhachHd" android:layout_width="match_parent" android:layout_height="48dp" android:background="@android:drawable/btn_dropdown" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phòng thuê" android:textColor="#0066B2" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <Spinner android:id="@+id/spFormPhongHd" android:layout_width="match_parent" android:layout_height="48dp" android:background="@android:drawable/btn_dropdown" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ngày bắt đầu" android:textColor="#0066B2" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <EditText android:id="@+id/edtFormNgayBatDau" android:layout_width="match_parent" android:layout_height="48dp" android:background="@android:drawable/editbox_background_normal" android:paddingHorizontal="12dp" android:hint="dd/mm/yyyy" android:focusable="false" android:clickable="true" android:inputType="textNoSuggestions" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ngày kết thúc" android:textColor="#0066B2" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <EditText android:id="@+id/edtFormNgayKetThuc" android:layout_width="match_parent" android:layout_height="48dp" android:background="@android:drawable/editbox_background_normal" android:paddingHorizontal="12dp" android:hint="dd/mm/yyyy" android:focusable="false" android:clickable="true" android:inputType="textNoSuggestions" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tiền cọc (VNĐ)" android:textColor="#0066B2" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <EditText android:id="@+id/edtFormTienCoc" android:layout_width="match_parent" android:layout_height="48dp" android:background="@android:drawable/editbox_background_normal" android:paddingHorizontal="12dp" android:inputType="number" android:layout_marginBottom="12dp"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trạng thái" android:textColor="#0066B2" android:textSize="13sp" android:textStyle="bold" android:layout_marginBottom="4dp"/>
+                    <Spinner android:id="@+id/spFormTrangThaiHd" android:layout_width="match_parent" android:layout_height="48dp" android:background="@android:drawable/btn_dropdown" android:layout_marginBottom="20dp"/>
+
+                    <Button android:id="@+id/btnFormXoaHd" android:layout_width="match_parent" android:layout_height="46dp" android:backgroundTint="@android:color/transparent" android:text="Xóa" android:textColor="#E74C3C" android:layout_marginBottom="8dp" android:textAllCaps="false"/>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="2">
+                        <Button android:id="@+id/btnFormHuyHd" android:layout_width="0dp" android:layout_height="46dp" android:layout_weight="1" android:backgroundTint="#F0F2F5" android:text="Hủy" android:textColor="#333333" android:layout_marginEnd="6dp" android:textAllCaps="false"/>
+                        <Button android:id="@+id/btnFormLuuHd" android:layout_width="0dp" android:layout_height="46dp" android:layout_weight="1" android:backgroundTint="#0066B2" android:text="Lưu" android:textColor="@android:color/white" android:textAllCaps="false"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lvHopDong"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/layoutBoLocHd"
+            android:layout_above="@id/layoutFormHd"
+            android:layout_marginHorizontal="16dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="4dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabThemHd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="24dp"
+            android:src="@android:drawable/ic_input_add"
+            app:backgroundTint="#2196F3"
+            app:tint="@android:color/white" />
+    </RelativeLayout>
+
+    <include layout="@layout/toolbar_va_menu"/>
+</androidx.drawerlayout.widget.DrawerLayout>

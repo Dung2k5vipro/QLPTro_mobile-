@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:background="#F8F9FA">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/layoutToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@android:color/white"
+            android:paddingTop="45dp"
+            android:paddingHorizontal="16dp">
+
+            <ImageView
+                android:id="@+id/imgMenu"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                android:contentDescription="@string/desc_menu"
+                app:tint="#0066B2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/title_quan_ly_phong"
+                android:textColor="#0066B2"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutSearch"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_below="@id/layoutToolbar"
+            android:layout_margin="16dp"
+            android:background="@android:drawable/editbox_background_normal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_search"
+                android:contentDescription="@string/desc_search"
+                app:tint="#6C757D" />
+            <EditText
+                android:id="@+id/edtTimKiem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/hint_tim_kiem_ma_phong"
+                android:inputType="text"
+                android:importantForAutofill="no"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layoutThongKe"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@id/layoutSearch"
+            android:layout_marginHorizontal="16dp"
+            android:backgroundTint="#2196F3"
+            android:background="@android:color/holo_blue_light"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_tong_so_phong"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/txtTongSoPhong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_so_phong_mac_dinh"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/scrollBoLoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutThongKe"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="16dp"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button android:id="@+id/btnLocTatCa" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#2ECC71" android:text="@string/btn_tat_ca" android:textColor="@android:color/white" android:textAllCaps="false"/>
+                <Button android:id="@+id/btnLocTrong" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_marginStart="10dp" android:backgroundTint="#E5E5E5" android:text="@string/btn_trong" android:textColor="#333333" android:textAllCaps="false"/>
+                <Button android:id="@+id/btnLocDaThue" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_marginStart="10dp" android:backgroundTint="#E5E5E5" android:text="@string/btn_da_thue" android:textColor="#333333" android:textAllCaps="false"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:id="@+id/layoutFormChucNang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:elevation="24dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtTieuDeForm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_form"
+                        android:textColor="#0066B2"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+                        <EditText android:id="@+id/edtFormTenPhong" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_ten_phong" android:inputType="text" android:importantForAutofill="no" android:layout_marginEnd="4dp"/>
+                        <EditText android:id="@+id/edtFormTrangThai" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_trang_thai" android:inputType="text" android:importantForAutofill="no" android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+                        <EditText android:id="@+id/edtFormGiaThue" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_gia_thue" android:inputType="number" android:importantForAutofill="no" android:layout_marginEnd="4dp"/>
+                        <EditText android:id="@+id/edtFormDienTich" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_dien_tich" android:inputType="numberDecimal" android:importantForAutofill="no" android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+
+                    <EditText android:id="@+id/edtFormGhiChu" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:hint="@string/hint_form_ghi_chu" android:importantForAutofill="no" android:inputType="text"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="360dp"
+                            android:layout_height="240dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="2dp">
+                            <ImageView
+                                android:id="@+id/imgFormPreview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#F0F2F5"
+                                android:scaleType="centerCrop"
+                                android:src="@android:drawable/ic_menu_gallery"
+                                android:contentDescription="Ảnh xem trước"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <Button
+                            android:id="@+id/btnFormChonAnh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Chọn ảnh từ máy"
+                            android:backgroundTint="#F0F2F5"
+                            android:textColor="#0066B2"
+                            android:textAllCaps="false"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <Button android:id="@+id/btnFormXoa" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#E74C3C" android:text="@string/btn_xoa_phong" android:textColor="@android:color/white" android:textAllCaps="false" android:visibility="gone"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:orientation="horizontal">
+                            <Button android:id="@+id/btnFormHuy" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#E5E5E5" android:text="@string/btn_huy" android:textColor="#333333" android:layout_marginEnd="8dp" android:textAllCaps="false"/>
+                            <Button android:id="@+id/btnFormLuu" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#0066B2" android:text="@string/btn_xac_nhan" android:textColor="@android:color/white" android:textAllCaps="false"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lvPhongTro"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/scrollBoLoc"
+            android:layout_above="@id/layoutFormChucNang"
+            android:layout_marginHorizontal="16dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="12dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabThemPhong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="24dp"
+            android:src="@android:drawable/ic_input_add"
+            android:contentDescription="@string/desc_add_phong"
+            app:backgroundTint="#0066B2"
+            app:tint= "@android:color/white" />
+    </RelativeLayout>
+
+    <include layout="@layout/toolbar_va_menu"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

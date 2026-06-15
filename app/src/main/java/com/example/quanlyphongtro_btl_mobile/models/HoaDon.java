@@ -1,0 +1,5 @@
+package com.example.quanlyphongtro_btl_mobile.models;
+
+public class HoaDon {
+    // Thuộc tính sẽ được định nghĩa sau
+}

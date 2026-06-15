@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Quanlyphongtro_btl_mobile">
+
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.MainActivity" android:exported="false" />
+
+        <activity
+            android:name=".activities.QuanLyPhongActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.QuanLyKhachActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
+
+        <activity android:name=".activities.QuanLyHopDongActivity" android:exported="false" />
+<!--        <activity android:name=".activities.QuanLyDichVuActivity" android:exported="false" />-->
+<!--        <activity android:name=".activities.QuanLyHoaDonActivity" android:exported="false" />-->
+<!--        <activity android:name=".activities.BaoCaoActivity" android:exported="false" />-->
+
+    </application>
+
+</manifest>

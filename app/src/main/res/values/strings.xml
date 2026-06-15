@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">quanlyphongtro_btl_mobile</string>
+    <string name="title_quan_ly_phong">Quản Lý Phòng Trọ</string>
+    <string name="hint_tim_kiem">Tìm kiếm phòng...</string>
+    <string name="hint_tim_kiem_ma_phong">Tìm kiếm mã phòng/tên phòng...</string>
+    <string name="label_tong_so_phong">Tổng số phòng</string>
+    <string name="label_so_phong_mac_dinh">0 Phòng</string>
+    <string name="btn_tat_ca">Tất cả</string>
+    <string name="btn_trong">Trống</string>
+    <string name="btn_da_thue">Đã thuê</string>
+    <string name="hint_ten_phong">Tên phòng</string>
+    <string name="hint_trang_thai">Trạng thái</string>
+    <string name="hint_gia_thue">Giá thuê</string>
+    <string name="hint_dien_tich">Diện tích</string>
+    <string name="hint_ghi_chu">Ghi chú</string>
+    <string name="btn_huy">Hủy</string>
+    <string name="btn_xoa">Xóa</string>
+    <string name="btn_luu">Lưu</string>
+    <string name="desc_menu">Menu</string>
+    <string name="desc_search">Tìm kiếm</string>
+    <string name="desc_add_phong">Thêm phòng mới</string>
+    <string name="title_form">Tiêu đề Form</string>
+    <string name="hint_form_ten_phong">Tên phòng (VD: P104)</string>
+    <string name="hint_form_trang_thai">Trạng thái (Trống/Đã thuê)</string>
+    <string name="hint_form_gia_thue">Giá thuê (VND)</string>
+    <string name="hint_form_dien_tich">Diện tích (m²)</string>
+    <string name="hint_form_ghi_chu">Ghi chú (VD: Phòng tầng 1)</string>
+    <string name="btn_xoa_phong">Xóa phòng</string>
+    <string name="btn_xac_nhan">Xác nhận</string>
+</resources>
