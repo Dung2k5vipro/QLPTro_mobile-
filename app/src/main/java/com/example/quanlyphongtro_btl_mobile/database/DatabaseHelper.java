@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "QuanLyPhongTroMoi.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,6 +42,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "    ngayKetThuc TEXT,\n" +
                 "    tienCoc REAL,\n" +
                 "    trangThai TEXT,\n" +
+                "    dieuKhoan TEXT,\n" +
+                "    nguoiLap TEXT,\n" +
                 "    FOREIGN KEY(maPhong) REFERENCES PhongTro(maPhong),\n" +
                 "    FOREIGN KEY(maKhach) REFERENCES KhachThue(maKhach)\n" +
                 ");");
@@ -82,16 +84,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO KhachThue (hoTen, soDienThoai, cccd, diaChi, gioiTinh, ngaySinh) VALUES ('Dang Van I','0901111119','001001001009','Ninh Binh','Nam','1997-09-09')");
         db.execSQL("INSERT INTO KhachThue (hoTen, soDienThoai, cccd, diaChi, gioiTinh, ngaySinh) VALUES ('Ngo Thi K','0901111120','001001001010','Thanh Hoa','Nu','2002-10-10');");
 
-        // 4. HỢP ĐỒNG
+        // 4. HỢP ĐỒNG MẪU
         for (int i = 1; i <= 10; i++) {
-            db.execSQL("INSERT INTO HopDong (soHd, maPhong, maKhach, ngayBatDau, ngayKetThuc, tienCoc, trangThai) VALUES (" +
+            db.execSQL("INSERT INTO HopDong (soHd, maPhong, maKhach, ngayBatDau, ngayKetThuc, tienCoc, trangThai, dieuKhoan, nguoiLap) VALUES (" +
                     "'HD00" + i + "'," +
                     i + "," +
                     i + "," +
                     "'2025-01-01'," +
                     "'2025-12-31'," +
                     "2000000," +
-                    "'Con hieu luc')");
+                    "'Còn hiệu lực'," +
+                    "'- Thanh toán đúng hạn.\n- Giữ gìn vệ sinh chung.\n- Không làm ồn sau 23h.'," +
+                    "'Quản trị viên')");
         }
     }
     @Override
@@ -106,6 +110,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // --- QUẢN LÝ TÀI KHOẢN ---
+    public String layHoTen(String user) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT hoTen FROM TaiKhoan WHERE tenDangNhap = ?", new String[]{user});
+        String hoTen = "";
+        if (cursor.moveToFirst()) {
+            hoTen = cursor.getString(0);
+        }
+        cursor.close();
+        return hoTen;
+    }
+
     public boolean kiemTraDangNhap(String user, String pass) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM TaiKhoan WHERE tenDangNhap = ? AND matKhau = ?", new String[]{user, pass});
@@ -209,7 +224,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // LOGIC TỰ ĐỘNG 1: THÊM HỢP ĐỒNG VÀ CHUYỂN TRẠNG THÁI PHÒNG SANG ĐÃ THUÊ
-    public boolean themHopDong(String soHd, int maPhong, int maKhach, String ngayBd, String ngayKt, double tienCoc, String trangThai) {
+    public boolean themHopDong(String soHd, int maPhong, int maKhach, String ngayBd, String ngayKt, double tienCoc, String trangThai, String dieuKhoan, String nguoiLap) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction(); // Bật cơ chế kiểm soát giao dịch an toàn CSDL
         try {
@@ -221,6 +236,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put("ngayKetThuc", ngayKt);
             values.put("tienCoc", tienCoc);
             values.put("trangThai", trangThai);
+            values.put("dieuKhoan", dieuKhoan);
+            values.put("nguoiLap", nguoiLap);
             long idHd = db.insert("HopDong", null, values);
 
             if (idHd != -1) {
@@ -254,7 +271,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Cập nhật thông tin sửa đổi hợp đồng
-    public boolean suaHopDong(int maHd, int maPhongMoi, int maPhongCu, int maKhach, String ngayBd, String ngayKt, double tienCoc, String trangThai) {
+    public boolean suaHopDong(int maHd, int maPhongMoi, int maPhongCu, int maKhach, String ngayBd, String ngayKt, double tienCoc, String trangThai, String dieuKhoan) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -265,6 +282,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put("ngayKetThuc", ngayKt);
             values.put("tienCoc", tienCoc);
             values.put("trangThai", trangThai);
+            values.put("dieuKhoan", dieuKhoan);
 
             int check = db.update("HopDong", values, "maHd = ?", new String[]{String.valueOf(maHd)});
             if (check > 0) {

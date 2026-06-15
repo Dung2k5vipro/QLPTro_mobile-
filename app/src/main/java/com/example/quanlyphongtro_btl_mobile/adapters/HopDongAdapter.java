@@ -20,6 +20,7 @@ public class HopDongAdapter extends BaseAdapter {
     public interface OnHopDongActionListener {
         void onSua(HopDong hd);
         void onXoa(HopDong hd);
+        void onIn(HopDong hd);
     }
 
     public HopDongAdapter(Context context, List<HopDong> listHd, OnHopDongActionListener listener) {
@@ -46,6 +47,7 @@ public class HopDongAdapter extends BaseAdapter {
         TextView txtNgayKt = convertView.findViewById(R.id.txtNgayKetThucItem);
         TextView txtTien = convertView.findViewById(R.id.txtTienCocItem);
         TextView txtTrangThai = convertView.findViewById(R.id.txtTrangThaiHdItem);
+        ImageView imgIn = convertView.findViewById(R.id.imgInHdItem);
         ImageView imgSua = convertView.findViewById(R.id.imgSuaHdItem);
         ImageView imgXoa = convertView.findViewById(R.id.imgXoaHdItem);
 
@@ -67,6 +69,7 @@ public class HopDongAdapter extends BaseAdapter {
 
         imgSua.setOnClickListener(v -> listener.onSua(hd));
         imgXoa.setOnClickListener(v -> listener.onXoa(hd));
+        imgIn.setOnClickListener(v -> listener.onIn(hd));
 
         return convertView;
     }

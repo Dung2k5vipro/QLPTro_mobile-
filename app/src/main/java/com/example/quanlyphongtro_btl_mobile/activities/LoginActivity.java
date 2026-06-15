@@ -50,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
                 if (hopLe) {
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
 
+                    // Lấy họ tên người dùng và lưu vào SharedPreferences
+                    String hoTen = dbHelper.layHoTen(taiKhoan);
+                    getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                            .edit()
+                            .putString("hoTen", hoTen)
+                            .apply();
+
                     // Chuyển sang màn hình Quản lý hợp đồng
                     Intent intent = new Intent(LoginActivity.this, QuanLyHopDongActivity.class);
                     startActivity(intent);
