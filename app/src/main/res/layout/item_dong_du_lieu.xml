@@ -76,10 +76,9 @@
 
         <ImageView
             android:id="@+id/imgHinhAnhItem"
-            android:layout_width="360dp"
-            android:layout_height="240dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:layout_marginTop="12dp"
-            android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"
             android:src="@android:drawable/ic_menu_gallery"
             android:contentDescription="Ảnh phòng" />

@@ -120,104 +120,260 @@
             android:id="@+id/layoutFormChucNang"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
             android:background="@android:color/white"
             android:elevation="24dp"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <ScrollView
+            <!-- Header Form -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
+                <TextView
+                    android:id="@+id/txtTieuDeForm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/title_them_phong_moi"
+                    android:textColor="#0066B2"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
+
+                <ImageView
+                    android:id="@+id/btnFormDong"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    app:tint="#333333" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EEEEEE" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
+                    <!-- Tên phòng -->
                     <TextView
-                        android:id="@+id/txtTieuDeForm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/title_form"
-                        android:textColor="#0066B2"
-                        android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="12dp"/>
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/label_ten_phong"
+                        android:textColor="#444444"
+                        android:textSize="14sp" />
 
+                    <EditText
+                        android:id="@+id/edtFormTenPhong"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@drawable/bg_edittext"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:paddingHorizontal="12dp"
+                        android:textSize="15sp" />
+
+                    <!-- Giá thuê & Diện tích -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:orientation="horizontal"
                         android:weightSum="2">
-                        <EditText android:id="@+id/edtFormTenPhong" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_ten_phong" android:inputType="text" android:importantForAutofill="no" android:layout_marginEnd="4dp"/>
-                        <EditText android:id="@+id/edtFormTrangThai" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_trang_thai" android:inputType="text" android:importantForAutofill="no" android:layout_marginStart="4dp"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6dp"
+                                android:text="@string/label_gia_thue"
+                                android:textColor="#444444"
+                                android:textSize="14sp" />
+
+                            <EditText
+                                android:id="@+id/edtFormGiaThue"
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:background="@drawable/bg_edittext"
+                                android:importantForAutofill="no"
+                                android:inputType="number"
+                                android:paddingHorizontal="12dp"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6dp"
+                                android:text="@string/label_dien_tich"
+                                android:textColor="#444444"
+                                android:textSize="14sp" />
+
+                            <EditText
+                                android:id="@+id/edtFormDienTich"
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:background="@drawable/bg_edittext"
+                                android:importantForAutofill="no"
+                                android:inputType="numberDecimal"
+                                android:paddingHorizontal="12dp"
+                                android:textSize="15sp" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <!-- Trạng thái -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/label_trang_thai"
+                        android:textColor="#444444"
+                        android:textSize="14sp" />
+
+                    <Spinner
+                        android:id="@+id/spnFormTrangThai"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@drawable/bg_edittext"
+                        android:paddingHorizontal="12dp" />
+
+                    <!-- Ghi chú -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/label_ghi_chu"
+                        android:textColor="#444444"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/edtFormGhiChu"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@drawable/bg_edittext"
+                        android:gravity="top"
+                        android:importantForAutofill="no"
+                        android:inputType="textMultiLine"
+                        android:padding="12dp"
+                        android:textSize="15sp" />
+
+                    <!-- Hình ảnh phòng -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="Hình ảnh phòng"
+                        android:textColor="#444444"
+                        android:textSize="14sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-                        <EditText android:id="@+id/edtFormGiaThue" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_gia_thue" android:inputType="number" android:importantForAutofill="no" android:layout_marginEnd="4dp"/>
-                        <EditText android:id="@+id/edtFormDienTich" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:hint="@string/hint_form_dien_tich" android:inputType="numberDecimal" android:importantForAutofill="no" android:layout_marginStart="4dp"/>
-                    </LinearLayout>
-
-                    <EditText android:id="@+id/edtFormGhiChu" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:hint="@string/hint_form_ghi_chu" android:importantForAutofill="no" android:inputType="text"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <androidx.cardview.widget.CardView
-                            android:layout_width="360dp"
-                            android:layout_height="240dp"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
                             app:cardCornerRadius="8dp"
-                            app:cardElevation="2dp">
+                            app:cardElevation="0dp"
+                            android:backgroundTint="#F5F5F5">
                             <ImageView
                                 android:id="@+id/imgFormPreview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="#F0F2F5"
                                 android:scaleType="centerCrop"
-                                android:src="@android:drawable/ic_menu_gallery"
-                                android:contentDescription="Ảnh xem trước"/>
+                                android:src="@android:drawable/ic_menu_gallery" />
                         </androidx.cardview.widget.CardView>
 
                         <Button
                             android:id="@+id/btnFormChonAnh"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="8dp"
-                            android:text="Chọn ảnh từ máy"
-                            android:backgroundTint="#F0F2F5"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:backgroundTint="#F8F9FA"
+                            android:text="Chọn ảnh từ thiết bị"
+                            android:textAllCaps="false"
                             android:textColor="#0066B2"
-                            android:textAllCaps="false"/>
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp">
-
-                        <Button android:id="@+id/btnFormXoa" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#E74C3C" android:text="@string/btn_xoa_phong" android:textColor="@android:color/white" android:textAllCaps="false" android:visibility="gone"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:orientation="horizontal">
-                            <Button android:id="@+id/btnFormHuy" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#E5E5E5" android:text="@string/btn_huy" android:textColor="#333333" android:layout_marginEnd="8dp" android:textAllCaps="false"/>
-                            <Button android:id="@+id/btnFormLuu" android:layout_width="wrap_content" android:layout_height="40dp" android:backgroundTint="#0066B2" android:text="@string/btn_xac_nhan" android:textColor="@android:color/white" android:textAllCaps="false"/>
-                        </LinearLayout>
-                    </RelativeLayout>
                 </LinearLayout>
             </ScrollView>
+
+            <!-- Footer Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F8F4F2"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:weightSum="3">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnFormHuy"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/bg_edittext"
+                    android:text="@string/btn_huy"
+                    android:textAllCaps="false"
+                    android:textColor="#333333" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnFormXoa"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
+                    android:backgroundTint="#E74C3C"
+                    android:text="Xóa"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnFormLuu"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:backgroundTint="#0066B2"
+                    android:text="@string/btn_luu_cap_nhat"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
         </LinearLayout>
 
         <ListView
@@ -225,7 +381,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/scrollBoLoc"
-            android:layout_above="@id/layoutFormChucNang"
             android:layout_marginHorizontal="16dp"
             android:divider="@android:color/transparent"
             android:dividerHeight="12dp" />

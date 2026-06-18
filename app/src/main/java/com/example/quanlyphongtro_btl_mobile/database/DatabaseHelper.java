@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "QuanLyPhongTroMoi.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 21;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE PhongTro (maPhong INTEGER PRIMARY KEY AUTOINCREMENT, tenPhong TEXT NOT NULL, giaThue REAL NOT NULL, dienTich REAL, trangThai TEXT NOT NULL, ghiChu TEXT, hinhAnh TEXT);");
 
         // 3. Bảng Khách Thuê
-        db.execSQL("CREATE TABLE KhachThue (maKhach INTEGER PRIMARY KEY AUTOINCREMENT, hoTen TEXT NOT NULL, soDienThoai TEXT, cccd TEXT, diaChi TEXT, gioiTinh TEXT, ngaySinh TEXT);");
+        db.execSQL("CREATE TABLE KhachThue (maKhach INTEGER PRIMARY KEY AUTOINCREMENT, hoTen TEXT NOT NULL, soDienThoai TEXT, cccd TEXT, diaChi TEXT, gioiTinh TEXT, ngaySinh TEXT, anhMatTruoc TEXT, anhMatSau TEXT);");
 
         // 4. Bảng Hợp Đồng
         db.execSQL("CREATE TABLE HopDong (\n" +
@@ -69,7 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     (18 + i) + "," +
                     "'Trống'," +
                     "'Phong moi'," +
-                    "'phong" + i + ".jpg')");
+                    "'')");
         }
 
         // 3. KHÁCH THUÊ
@@ -100,13 +100,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS HoaDon");
-        db.execSQL("DROP TABLE IF EXISTS DichVu");
-        db.execSQL("DROP TABLE IF EXISTS HopDong");
-        db.execSQL("DROP TABLE IF EXISTS KhachThue");
-        db.execSQL("DROP TABLE IF EXISTS PhongTro");
-        db.execSQL("DROP TABLE IF EXISTS TaiKhoan");
-        onCreate(db);
+        // CHIẾN LƯỢC CẬP NHẬT AN TOÀN:
+        // Không sử dụng DROP TABLE nữa để tránh mất dữ liệu bạn đã nhập tay.
+        
+        if (oldVersion < 22) {
+            // Ví dụ: Nếu sau này bạn muốn thêm một cột mới vào bảng PhongTro ở phiên bản 22
+            // hãy viết lệnh ALTER TABLE ở đây thay vì xóa bảng.
+            // db.execSQL("ALTER TABLE PhongTro ADD COLUMN moTaMoi TEXT");
+        }
+        
+        // Ghi chú: Nếu bạn muốn thêm dữ liệu mẫu mới mà không ảnh hưởng dữ liệu cũ,
+        // hãy viết các lệnh INSERT vào các khối if (oldVersion < ...) tương ứng.
     }
 
     // --- QUẢN LÝ TÀI KHOẢN ---
@@ -155,15 +159,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return getReadableDatabase().rawQuery("SELECT * FROM KhachThue ORDER BY maKhach DESC", null);
     }
 
-    public boolean themKhachThue(String ten, String sdt, String cccd, String dc, String gt, String ns) {
+    public boolean themKhachThue(String ten, String sdt, String cccd, String dc, String gt, String ns, String anhTruoc, String anhSau) {
         ContentValues v = new ContentValues();
         v.put("hoTen", ten); v.put("soDienThoai", sdt); v.put("cccd", cccd); v.put("diaChi", dc); v.put("gioiTinh", gt); v.put("ngaySinh", ns);
+        v.put("anhMatTruoc", anhTruoc); v.put("anhMatSau", anhSau);
         return getWritableDatabase().insert("KhachThue", null, v) != -1;
     }
 
-    public boolean suaKhachThue(int id, String ten, String sdt, String cccd, String dc, String gt, String ns) {
+    public boolean suaKhachThue(int id, String ten, String sdt, String cccd, String dc, String gt, String ns, String anhTruoc, String anhSau) {
         ContentValues v = new ContentValues();
         v.put("hoTen", ten); v.put("soDienThoai", sdt); v.put("cccd", cccd); v.put("diaChi", dc); v.put("gioiTinh", gt); v.put("ngaySinh", ns);
+        v.put("anhMatTruoc", anhTruoc); v.put("anhMatSau", anhSau);
         return getWritableDatabase().update("KhachThue", v, "maKhach = ?", new String[]{String.valueOf(id)}) > 0;
     }
 

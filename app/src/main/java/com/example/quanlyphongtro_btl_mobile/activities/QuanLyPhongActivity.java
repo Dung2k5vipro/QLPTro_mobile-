@@ -39,8 +39,10 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
     // Ánh xạ Form đa năng tích hợp chung
     private LinearLayout layoutFormChucNang;
     private TextView txtTieuDeForm;
-    private EditText edtFormTenPhong, edtFormTrangThai, edtFormGiaThue, edtFormDienTich, edtFormGhiChu;
-    private Button btnFormHuy, btnFormXoa, btnFormLuu;
+    private EditText edtFormTenPhong, edtFormGiaThue, edtFormDienTich, edtFormGhiChu;
+    private android.widget.Spinner spnFormTrangThai;
+    private Button btnFormHuy, btnFormLuu, btnFormXoa;
+    private ImageView btnFormDong;
 
     // THÊM: Biến xử lý chọn hình ảnh
     private ImageView imgFormPreview;
@@ -100,12 +102,12 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
         fabThemPhong.setOnClickListener(v -> {
             laHanhDongThemMoi = true;
             phongDangChonSua = null;
-            txtTieuDeForm.setText("THÊM PHÒNG TRỌ MỚI");
+            txtTieuDeForm.setText(R.string.title_them_phong_moi);
             btnFormXoa.setVisibility(View.GONE);
 
-            // Xóa trống các ô nhập liệu và reset ảnh
+            // Xóa trống các ô nhập liệu
             edtFormTenPhong.setText("");
-            edtFormTrangThai.setText("Trống");
+            spnFormTrangThai.setSelection(0); // Mặc định là Trống
             edtFormGiaThue.setText("");
             edtFormDienTich.setText("");
             edtFormGhiChu.setText("");
@@ -120,12 +122,19 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
             laHanhDongThemMoi = false;
             phongDangChonSua = danhSachHienThiPhongTro.get(position);
 
-            txtTieuDeForm.setText("CHỈNH SỬA PHÒNG: " + phongDangChonSua.getTenPhong());
+            txtTieuDeForm.setText("CHỈNH SỬA PHÒNG");
             btnFormXoa.setVisibility(View.VISIBLE);
 
             // Đổ dữ liệu cũ vào form
             edtFormTenPhong.setText(phongDangChonSua.getTenPhong());
-            edtFormTrangThai.setText(phongDangChonSua.getTrangThai());
+            
+            // Set Spinner trạng thái
+            if (phongDangChonSua.getTrangThai().equals("Đã thuê")) {
+                spnFormTrangThai.setSelection(1);
+            } else {
+                spnFormTrangThai.setSelection(0);
+            }
+
             edtFormGiaThue.setText(String.valueOf((int) phongDangChonSua.getGiaThue()));
             edtFormDienTich.setText(String.valueOf(phongDangChonSua.getDienTich()));
             edtFormGhiChu.setText(phongDangChonSua.getGhiChu());
@@ -146,8 +155,9 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
             return true;
         });
 
-        // 3. SỰ KIỆN NÚT HỦY FORM
+        // 3. SỰ KIỆN NÚT HỦY / ĐÓNG FORM
         btnFormHuy.setOnClickListener(v -> dongFormChucNang());
+        btnFormDong.setOnClickListener(v -> dongFormChucNang());
 
         // 4. SỰ KIỆN NÚT XÁC NHẬN LƯU (Xử lý thông minh rẽ nhánh Thêm hoặc Sửa)
         btnFormLuu.setOnClickListener(v -> xuLyNutXacNhanLuu());
@@ -177,14 +187,21 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
 
         layoutFormChucNang = findViewById(R.id.layoutFormChucNang);
         txtTieuDeForm = findViewById(R.id.txtTieuDeForm);
+        btnFormDong = findViewById(R.id.btnFormDong);
         edtFormTenPhong = findViewById(R.id.edtFormTenPhong);
-        edtFormTrangThai = findViewById(R.id.edtFormTrangThai);
+        spnFormTrangThai = findViewById(R.id.spnFormTrangThai);
         edtFormGiaThue = findViewById(R.id.edtFormGiaThue);
         edtFormDienTich = findViewById(R.id.edtFormDienTich);
         edtFormGhiChu = findViewById(R.id.edtFormGhiChu);
         btnFormHuy = findViewById(R.id.btnFormHuy);
-        btnFormXoa = findViewById(R.id.btnFormXoa);
         btnFormLuu = findViewById(R.id.btnFormLuu);
+        btnFormXoa = findViewById(R.id.btnFormXoa);
+
+        // Thiết lập Spinner trạng thái
+        String[] dsTrangThai = {"Trống", "Đã thuê"};
+        android.widget.ArrayAdapter<String> adapterSpin = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dsTrangThai);
+        adapterSpin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnFormTrangThai.setAdapter(adapterSpin);
 
         // Ánh xạ thành phần hình ảnh
         imgFormPreview = findViewById(R.id.imgFormPreview);
@@ -198,12 +215,12 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
 
     private void xuLyNutXacNhanLuu() {
         String ten = edtFormTenPhong.getText().toString().trim();
-        String trangThai = edtFormTrangThai.getText().toString().trim();
+        String trangThai = spnFormTrangThai.getSelectedItem().toString();
         String giaStr = edtFormGiaThue.getText().toString().trim();
         String dienTichStr = edtFormDienTich.getText().toString().trim();
         String ghiChu = edtFormGhiChu.getText().toString().trim();
 
-        if (ten.isEmpty() || trangThai.isEmpty() || giaStr.isEmpty() || dienTichStr.isEmpty()) {
+        if (ten.isEmpty() || giaStr.isEmpty() || dienTichStr.isEmpty()) {
             Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
             return;
         }

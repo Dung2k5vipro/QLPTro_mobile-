@@ -1,8 +1,11 @@
 package com.example.quanlyphongtro_btl_mobile.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -12,9 +15,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.example.quanlyphongtro_btl_mobile.R;
 import com.example.quanlyphongtro_btl_mobile.adapters.KhachThueAdapter;
@@ -32,10 +39,10 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
     private LinearLayout btnThemKhachNhanh;
     private ListView lvKhachThue;
 
-    // Thành phần Form đa năng gộp chung theo ảnh mẫu
-    private LinearLayout layoutFormKhach;
-    private TextView txtTieuDeFormKhach;
-    private ImageView imgDongFormKhach;
+    private LinearLayout layoutFormKhach, layoutChonAnhCccd;
+    private TextView txtTieuDeFormKhach, txtLabelAnhCccd;
+    private ImageView imgDongFormKhach, imgFormAnhTruoc, imgFormAnhSau;
+    private RelativeLayout btnChonAnhTruoc, btnChonAnhSau;
     private EditText edtFormHoTen, edtFormSdt, edtFormCccd, edtFormDiaChi, edtFormNgaySinh;
     private Spinner spFormGioiTinh;
     private Button btnFormXoaKhach, btnFormHuyKhach, btnFormLuuKhach;
@@ -47,6 +54,28 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
 
     private boolean laHanhDongThemMoi = true;
     private KhachThue khachDangChonSua = null;
+
+    private String duongDanAnhTruoc = "", duongDanAnhSau = "";
+    private boolean isChonAnhTruoc = true;
+
+    private final ActivityResultLauncher<Intent> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri selectedImageUri = result.getData().getData();
+                    // Cấp quyền đọc lâu dài cho Uri (quan trọng khi lưu vào DB)
+                    getContentResolver().takePersistableUriPermission(selectedImageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    
+                    if (isChonAnhTruoc) {
+                        duongDanAnhTruoc = selectedImageUri.toString();
+                        imgFormAnhTruoc.setImageURI(selectedImageUri);
+                    } else {
+                        duongDanAnhSau = selectedImageUri.toString();
+                        imgFormAnhSau.setImageURI(selectedImageUri);
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,65 +91,175 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
         caiDatSpinnerGioiTinh();
         taiDuLieuKhachThue();
 
-        // 1. SỰ KIỆN CLICK Ô NGÀY SINH -> BẬT LỊCH ĐIỆN THOẠI
         edtFormNgaySinh.setOnClickListener(v -> hienThiHopThoaiChonNgay());
 
-        // 2. SỰ KIỆN BẤM NÚT "THÊM KHÁCH THUÊ" LỚN MÀU XANH
         btnThemKhachNhanh.setOnClickListener(v -> {
             laHanhDongThemMoi = true;
             khachDangChonSua = null;
-            txtTieuDeFormKhach.setText("Thông tin khách thuê");
+            txtTieuDeFormKhach.setText("Thêm khách thuê mới");
             btnFormLuuKhach.setText("Thêm mới");
-            btnFormXoaKhach.setVisibility(View.GONE); // Đang thêm mới thì ẩn nút xóa
-
-            // Xóa trống form nhập liệu
-            edtFormHoTen.setText("");
-            edtFormSdt.setText("");
-            edtFormCccd.setText("");
-            edtFormDiaChi.setText("");
-            edtFormNgaySinh.setText("");
-            spFormGioiTinh.setSelection(0);
-
+            btnFormXoaKhach.setVisibility(View.GONE);
+            txtLabelAnhCccd.setVisibility(View.VISIBLE);
+            layoutChonAnhCccd.setVisibility(View.VISIBLE);
+            lamTrongForm();
             layoutFormKhach.setVisibility(View.VISIBLE);
         });
 
-        // 3. SỰ KIỆN ĐÓNG FORM KHI BẤM NÚT (X) HOẶC NÚT HỦY
+        btnChonAnhTruoc.setOnClickListener(v -> {
+            isChonAnhTruoc = true;
+            moBoSuuTap();
+        });
+        btnChonAnhSau.setOnClickListener(v -> {
+            isChonAnhTruoc = false;
+            moBoSuuTap();
+        });
+
         imgDongFormKhach.setOnClickListener(v -> layoutFormKhach.setVisibility(View.GONE));
         btnFormHuyKhach.setOnClickListener(v -> layoutFormKhach.setVisibility(View.GONE));
-
-        // 4. SỰ KIỆN NÚT LƯU (THÊM HOẶC CẬP NHẬT)
         btnFormLuuKhach.setOnClickListener(v -> xuLyLuuDuLieuKhach());
-
-        // 5. SỰ KIỆN NÚT XÓA KHÁCH THUÊ
         btnFormXoaKhach.setOnClickListener(v -> xuLyXoaKhachThue());
 
-        // 6. THANH TÌM KIẾM THEO TÊN, SĐT, CCCD ĐA NĂNG
+        // SỰ KIỆN NHẤN GIỮ VÀO ITEM ĐỂ XEM CHI TIẾT
+        lvKhachThue.setOnItemLongClickListener((parent, view, position, id) -> {
+            hienThiChiTietKhach(danhSachHienThiKhach.get(position));
+            return true;
+        });
+
         edtTimKiemKhach.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(Editable s) {
-                // Chỉ xử lý tìm kiếm khi nội dung thực sự thay đổi và không rỗng 
-                // để tránh gây lag cho bộ gõ tiếng Việt
-                String query = s.toString();
-                xuLyTimKiemKhachThue(query);
+                xuLyTimKiemKhachThue(s.toString());
             }
         });
+    }
+
+    private void moBoSuuTap() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        pickImageLauncher.launch(intent);
+    }
+
+    private void lamTrongForm() {
+        edtFormHoTen.setText("");
+        edtFormSdt.setText("");
+        edtFormCccd.setText("");
+        edtFormDiaChi.setText("");
+        edtFormNgaySinh.setText("");
+        spFormGioiTinh.setSelection(0);
+        duongDanAnhTruoc = "";
+        duongDanAnhSau = "";
+        imgFormAnhTruoc.setImageResource(android.R.drawable.ic_menu_camera);
+        imgFormAnhSau.setImageResource(android.R.drawable.ic_menu_camera);
+    }
+
+    private void hienThiChiTietKhach(KhachThue khach) {
+        laHanhDongThemMoi = false;
+        khachDangChonSua = khach;
+        txtTieuDeFormKhach.setText("Chi tiết khách thuê");
+        btnFormLuuKhach.setText("Cập nhật");
+        btnFormXoaKhach.setVisibility(View.VISIBLE);
+        txtLabelAnhCccd.setVisibility(View.VISIBLE);
+        layoutChonAnhCccd.setVisibility(View.VISIBLE);
+
+        edtFormHoTen.setText(khach.getHoTen());
+        edtFormSdt.setText(khach.getSoDienThoai());
+        edtFormCccd.setText(khach.getCccd());
+        edtFormDiaChi.setText(khach.getDiaChi());
+        edtFormNgaySinh.setText(khach.getNgaySinh());
+        spFormGioiTinh.setSelection(khach.getGioiTinh().equals("Nam") ? 0 : 1);
+
+        duongDanAnhTruoc = khach.getAnhMatTruoc();
+        duongDanAnhSau = khach.getAnhMatSau();
+
+        if (duongDanAnhTruoc != null && !duongDanAnhTruoc.isEmpty()) {
+            try {
+                imgFormAnhTruoc.setImageURI(Uri.parse(duongDanAnhTruoc));
+            } catch (Exception e) {
+                imgFormAnhTruoc.setImageResource(android.R.drawable.ic_menu_camera);
+            }
+        } else {
+            imgFormAnhTruoc.setImageResource(android.R.drawable.ic_menu_camera);
+        }
+
+        if (duongDanAnhSau != null && !duongDanAnhSau.isEmpty()) {
+            try {
+                imgFormAnhSau.setImageURI(Uri.parse(duongDanAnhSau));
+            } catch (Exception e) {
+                imgFormAnhSau.setImageResource(android.R.drawable.ic_menu_camera);
+            }
+        } else {
+            imgFormAnhSau.setImageResource(android.R.drawable.ic_menu_camera);
+        }
+
+        layoutFormKhach.setVisibility(View.VISIBLE);
+    }
+
+    private void hienThiFormSua(KhachThue khach) {
+        laHanhDongThemMoi = false;
+        khachDangChonSua = khach;
+        txtTieuDeFormKhach.setText("Cập nhật khách thuê");
+        btnFormLuuKhach.setText("Cập nhật");
+        btnFormXoaKhach.setVisibility(View.VISIBLE);
+        
+        // Hiển thị phần ảnh CCCD để có thể sửa
+        txtLabelAnhCccd.setVisibility(View.VISIBLE);
+        layoutChonAnhCccd.setVisibility(View.VISIBLE);
+
+        edtFormHoTen.setText(khach.getHoTen());
+        edtFormSdt.setText(khach.getSoDienThoai());
+        edtFormCccd.setText(khach.getCccd());
+        edtFormDiaChi.setText(khach.getDiaChi());
+        edtFormNgaySinh.setText(khach.getNgaySinh());
+        spFormGioiTinh.setSelection(khach.getGioiTinh().equals("Nam") ? 0 : 1);
+
+        duongDanAnhTruoc = khach.getAnhMatTruoc();
+        duongDanAnhSau = khach.getAnhMatSau();
+
+        // Nạp ảnh hiện tại vào ImageView
+        if (duongDanAnhTruoc != null && !duongDanAnhTruoc.isEmpty()) {
+            try {
+                imgFormAnhTruoc.setImageURI(Uri.parse(duongDanAnhTruoc));
+            } catch (Exception e) {
+                imgFormAnhTruoc.setImageResource(android.R.drawable.ic_menu_camera);
+            }
+        } else {
+            imgFormAnhTruoc.setImageResource(android.R.drawable.ic_menu_camera);
+        }
+
+        if (duongDanAnhSau != null && !duongDanAnhSau.isEmpty()) {
+            try {
+                imgFormAnhSau.setImageURI(Uri.parse(duongDanAnhSau));
+            } catch (Exception e) {
+                imgFormAnhSau.setImageResource(android.R.drawable.ic_menu_camera);
+            }
+        } else {
+            imgFormAnhSau.setImageResource(android.R.drawable.ic_menu_camera);
+        }
+
+        layoutFormKhach.setVisibility(View.VISIBLE);
     }
 
     private void anhXaGiaoDienKhachThue() {
         edtTimKiemKhach = findViewById(R.id.edtTimKiemKhach);
         btnThemKhachNhanh = findViewById(R.id.btnThemKhachNhanh);
         lvKhachThue = findViewById(R.id.lvKhachThue);
-
         layoutFormKhach = findViewById(R.id.layoutFormKhach);
         txtTieuDeFormKhach = findViewById(R.id.txtTieuDeFormKhach);
         imgDongFormKhach = findViewById(R.id.imgDongFormKhach);
+        imgFormAnhTruoc = findViewById(R.id.imgFormAnhTruoc);
+        imgFormAnhSau = findViewById(R.id.imgFormAnhSau);
+        btnChonAnhTruoc = findViewById(R.id.btnChonAnhTruoc);
+        btnChonAnhSau = findViewById(R.id.btnChonAnhSau);
         edtFormHoTen = findViewById(R.id.edtFormHoTen);
         edtFormSdt = findViewById(R.id.edtFormSdt);
         edtFormCccd = findViewById(R.id.edtFormCccd);
         edtFormDiaChi = findViewById(R.id.edtFormDiaChi);
         edtFormNgaySinh = findViewById(R.id.edtFormNgaySinh);
         spFormGioiTinh = findViewById(R.id.spFormGioiTinh);
+        layoutChonAnhCccd = findViewById(R.id.layoutChonAnhCccd);
+        txtLabelAnhCccd = findViewById(R.id.txtLabelAnhCccd);
         btnFormXoaKhach = findViewById(R.id.btnFormXoaKhach);
         btnFormHuyKhach = findViewById(R.id.btnFormHuyKhach);
         btnFormLuuKhach = findViewById(R.id.btnFormLuuKhach);
@@ -150,10 +289,27 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
         danhSachGocKhach.clear();
         Cursor cursor = dbHelper.layDanhSachKhachThue();
         if (cursor != null && cursor.moveToFirst()) {
+            int idxId = cursor.getColumnIndex("maKhach");
+            int idxTen = cursor.getColumnIndex("hoTen");
+            int idxSdt = cursor.getColumnIndex("soDienThoai");
+            int idxCccd = cursor.getColumnIndex("cccd");
+            int idxDc = cursor.getColumnIndex("diaChi");
+            int idxGt = cursor.getColumnIndex("gioiTinh");
+            int idxNs = cursor.getColumnIndex("ngaySinh");
+            int idxAnhT = cursor.getColumnIndex("anhMatTruoc");
+            int idxAnhS = cursor.getColumnIndex("anhMatSau");
+
             do {
                 danhSachGocKhach.add(new KhachThue(
-                        cursor.getInt(0), cursor.getString(1), cursor.getString(2),
-                        cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6)
+                        cursor.getInt(idxId),
+                        cursor.getString(idxTen),
+                        cursor.getString(idxSdt),
+                        cursor.getString(idxCccd),
+                        cursor.getString(idxDc),
+                        cursor.getString(idxGt),
+                        cursor.getString(idxNs),
+                        cursor.getString(idxAnhT),
+                        cursor.getString(idxAnhS)
                 ));
             } while (cursor.moveToNext());
             cursor.close();
@@ -161,26 +317,7 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
         danhSachHienThiKhach.clear();
         danhSachHienThiKhach.addAll(danhSachGocKhach);
 
-        // Khởi tạo Adapter đồng thời lắng nghe sự kiện bấm vào nút sửa (Cây bút)
-        adapterKhach = new KhachThueAdapter(this, danhSachHienThiKhach, khachThue -> {
-            laHanhDongThemMoi = false;
-            khachDangChonSua = khachThue;
-
-            txtTieuDeFormKhach.setText("Thông tin khách thuê");
-            btnFormLuuKhach.setText("Cập nhật");
-            btnFormXoaKhach.setVisibility(View.VISIBLE); // Hiện nút xóa khi sửa
-
-            // Đổ dữ liệu cũ lên ô nhập
-            edtFormHoTen.setText(khachThue.getHoTen());
-            edtFormSdt.setText(khachThue.getSoDienThoai());
-            edtFormCccd.setText(khachThue.getCccd());
-            edtFormDiaChi.setText(khachThue.getDiaChi());
-            edtFormNgaySinh.setText(khachThue.getNgaySinh());
-            if (khachThue.getGioiTinh().equals("Nam")) spFormGioiTinh.setSelection(0);
-            else spFormGioiTinh.setSelection(1);
-
-            layoutFormKhach.setVisibility(View.VISIBLE);
-        });
+        adapterKhach = new KhachThueAdapter(this, danhSachHienThiKhach, this::hienThiFormSua);
         lvKhachThue.setAdapter(adapterKhach);
     }
 
@@ -192,26 +329,24 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
         String gioiTinh = spFormGioiTinh.getSelectedItem().toString();
         String ngaySinh = edtFormNgaySinh.getText().toString().trim();
 
-        if (ten.isEmpty() || sdt.isEmpty() || cccd.isEmpty() || diaChi.isEmpty() || ngaySinh.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đủ thông tin khách!", Toast.LENGTH_SHORT).show();
+        if (ten.isEmpty() || sdt.isEmpty() || cccd.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập các thông tin cơ bản!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         boolean check;
         if (laHanhDongThemMoi) {
-            check = dbHelper.themKhachThue(ten, sdt, cccd, diaChi, gioiTinh, ngaySinh);
-            if (check) Toast.makeText(this, "Đã thêm khách thuê thành công!", Toast.LENGTH_SHORT).show();
+            check = dbHelper.themKhachThue(ten, sdt, cccd, diaChi, gioiTinh, ngaySinh, duongDanAnhTruoc, duongDanAnhSau);
         } else {
-            if (khachDangChonSua == null) return;
-            check = dbHelper.suaKhachThue(khachDangChonSua.getMaKhach(), ten, sdt, cccd, diaChi, gioiTinh, ngaySinh);
-            if (check) Toast.makeText(this, "Đã cập nhật thông tin khách thuê!", Toast.LENGTH_SHORT).show();
+            check = dbHelper.suaKhachThue(khachDangChonSua.getMaKhach(), ten, sdt, cccd, diaChi, gioiTinh, ngaySinh, duongDanAnhTruoc, duongDanAnhSau);
         }
 
         if (check) {
             layoutFormKhach.setVisibility(View.GONE);
             taiDuLieuKhachThue();
+            Toast.makeText(this, "Lưu thành công!", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Thao tác cơ sở dữ liệu thất bại!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Thao tác thất bại!", Toast.LENGTH_SHORT).show();
         }
     }
 

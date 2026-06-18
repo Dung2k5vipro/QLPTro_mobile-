@@ -19,7 +19,14 @@
     <string name="desc_menu">Menu</string>
     <string name="desc_search">Tìm kiếm</string>
     <string name="desc_add_phong">Thêm phòng mới</string>
-    <string name="title_form">Tiêu đề Form</string>
+    <string name="label_ma_phong">Mã phòng</string>
+    <string name="label_ten_phong">Tên phòng</string>
+    <string name="label_gia_thue">Giá thuê (VNĐ)</string>
+    <string name="label_dien_tich">Diện tích (m²)</string>
+    <string name="label_trang_thai">Trạng thái</string>
+    <string name="label_ghi_chu">Ghi chú</string>
+    <string name="btn_luu_cap_nhat">Lưu/Cập nhật</string>
+    <string name="title_them_phong_moi">Thêm Phòng Mới</string>
     <string name="hint_form_ten_phong">Tên phòng (VD: P104)</string>
     <string name="hint_form_trang_thai">Trạng thái (Trống/Đã thuê)</string>
     <string name="hint_form_gia_thue">Giá thuê (VND)</string>

@@ -114,12 +114,23 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <ListView
+            android:id="@+id/lvKhachThue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/layoutSearch"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="16dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="4dp" />
+
         <LinearLayout
             android:id="@+id/layoutFormKhach"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
+            android:background="@android:drawable/dialog_holo_light_frame"
             android:elevation="32dp"
             android:orientation="vertical"
             android:visibility="gone">
@@ -198,6 +209,67 @@
                         </LinearLayout>
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/txtLabelAnhCccd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ảnh CCCD (Mặt trước &amp; sau)"
+                        android:textColor="#555555"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+                    <LinearLayout
+                        android:id="@+id/layoutChonAnhCccd"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_marginBottom="12dp">
+                        <RelativeLayout
+                            android:id="@+id/btnChonAnhTruoc"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
+                            android:background="@android:drawable/editbox_background_normal">
+                            <ImageView
+                                android:id="@+id/imgFormAnhTruoc"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerInside"
+                                android:src="@android:drawable/ic_menu_camera"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:text="Mặt trước"
+                                android:textSize="10sp"
+                                android:layout_marginBottom="4dp"/>
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/btnChonAnhSau"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            android:background="@android:drawable/editbox_background_normal">
+                            <ImageView
+                                android:id="@+id/imgFormAnhSau"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerInside"
+                                android:src="@android:drawable/ic_menu_camera"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:text="Mặt sau"
+                                android:textSize="10sp"
+                                android:layout_marginBottom="4dp"/>
+                        </RelativeLayout>
+                    </LinearLayout>
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -217,16 +289,6 @@
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
-
-        <ListView
-            android:id="@+id/lvKhachThue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/layoutSearch"
-            android:layout_above="@id/layoutFormKhach"
-            android:layout_marginHorizontal="16dp"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="4dp" />
     </RelativeLayout>
 
     <include layout="@layout/toolbar_va_menu"/>
