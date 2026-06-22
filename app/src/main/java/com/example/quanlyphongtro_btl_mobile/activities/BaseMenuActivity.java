@@ -37,32 +37,38 @@ public class BaseMenuActivity extends AppCompatActivity {
         if (drawerLayout != null) {
             ViewCompat.setOnApplyWindowInsetsListener(drawerLayout, (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                
-                // 1. Toolbar: Đẩy nội dung xuống dưới Status Bar (vùng camera)
-                // Nền của toolbar vẫn sẽ tràn lên trên vì padding không làm thay đổi background
                 if (layoutToolbar != null) {
                     layoutToolbar.setPadding(
                         layoutToolbar.getPaddingLeft(),
-                        systemBars.top, // Padding Top bằng chiều cao vùng camera
+                        systemBars.top,
                         layoutToolbar.getPaddingRight(),
                         layoutToolbar.getPaddingBottom()
                     );
                 }
-                
-                // 2. Navigation Bar: Đẩy phần dưới lên để không bị thanh điều hướng che (nếu có)
                 v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
-
                 return WindowInsetsCompat.CONSUMED;
             });
         }
 
-        menuBaoCao = findViewById(R.id.menuBaoCao);
-        menuPhongTro = findViewById(R.id.menuPhongTro);
-        menuKhachThue = findViewById(R.id.menuKhachThue);
-        menuHopDong = findViewById(R.id.menuHopDong);
-        menuDichVu = findViewById(R.id.menuDichVu);
-        menuHoaDon = findViewById(R.id.menuHoaDon);
-        menuDangXuat = findViewById(R.id.menuDangXuat);
+        // Tìm các mục menu thông qua NavigationView hoặc trực tiếp
+        View navView = findViewById(R.id.navigationView);
+        if (navView != null) {
+            menuBaoCao = navView.findViewById(R.id.menuBaoCao);
+            menuPhongTro = navView.findViewById(R.id.menuPhongTro);
+            menuKhachThue = navView.findViewById(R.id.menuKhachThue);
+            menuHopDong = navView.findViewById(R.id.menuHopDong);
+            menuDichVu = navView.findViewById(R.id.menuDichVu);
+            menuHoaDon = navView.findViewById(R.id.menuHoaDon);
+            menuDangXuat = navView.findViewById(R.id.menuDangXuat);
+        } else {
+            menuBaoCao = findViewById(R.id.menuBaoCao);
+            menuPhongTro = findViewById(R.id.menuPhongTro);
+            menuKhachThue = findViewById(R.id.menuKhachThue);
+            menuHopDong = findViewById(R.id.menuHopDong);
+            menuDichVu = findViewById(R.id.menuDichVu);
+            menuHoaDon = findViewById(R.id.menuHoaDon);
+            menuDangXuat = findViewById(R.id.menuDangXuat);
+        }
 
         if (imgMenu != null) {
             imgMenu.setOnClickListener(v -> moMenuBen());
@@ -80,6 +86,18 @@ public class BaseMenuActivity extends AppCompatActivity {
     protected void dongMenuBen() {
         if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    // Hàm hỗ trợ loại bỏ dấu tiếng Việt để tìm kiếm dễ dàng hơn
+    protected String loaiBoDau(String str) {
+        if (str == null) return "";
+        try {
+            String temp = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+            return pattern.matcher(temp).replaceAll("").toLowerCase().replaceAll("đ", "d");
+        } catch (Exception e) {
+            return str.toLowerCase();
         }
     }
 

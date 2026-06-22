@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtTenPhongHd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phòng 101"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#0066B2"/>
+            <TextView
+                android:id="@+id/txtTrangThaiHd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="Chưa thanh toán"
+                android:textColor="#D32F2F"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:background="#FFEBEE"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtThangHd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tháng 03/2024"
+            android:layout_marginTop="4dp"
+            android:textColor="#666666"/>
+
+        <TextView
+            android:id="@+id/txtTongTienHd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2,500,000 VNĐ"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#2E7D32"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EEEEEE"
+            android:layout_marginVertical="12dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+            <Button
+                android:id="@+id/btnXoaHd"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Xóa"
+                android:backgroundTint="#F5F5F5"
+                android:textColor="#666666"
+                android:textAllCaps="false"
+                style="?android:attr/buttonBarButtonStyle"/>
+            <Button
+                android:id="@+id/btnThanhToanHd"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Thanh toán"
+                android:backgroundTint="#4CAF50"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

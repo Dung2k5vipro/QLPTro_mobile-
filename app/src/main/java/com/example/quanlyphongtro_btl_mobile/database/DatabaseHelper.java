@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.quanlyphongtro_btl_mobile.models.DichVu;
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "QuanLyPhongTroMoi.db";
@@ -51,7 +54,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE DichVu (maDichVu INTEGER PRIMARY KEY AUTOINCREMENT, tenDichVu TEXT NOT NULL, donGia REAL NOT NULL, donViTinh TEXT, ghiChu TEXT);");
 
         // 6. Bảng Hóa Đơn
-        db.execSQL("CREATE TABLE HoaDon (maHoaDon INTEGER PRIMARY KEY AUTOINCREMENT, maPhong INTEGER NOT NULL, thang TEXT NOT NULL, tienPhong REAL, chiSoDienCu INTEGER, chiSoDienMoi INTEGER, chiSoNuocCu INTEGER, chiSoNuocMoi INTEGER, tienDien REAL, tienNuoc REAL, tienInternet REAL, tienRac REAL, tongTien REAL, trangThai TEXT, FOREIGN KEY (maPhong) REFERENCES PhongTro(maPhong));");
+        db.execSQL("CREATE TABLE HoaDon (maHoaDon INTEGER PRIMARY KEY AUTOINCREMENT, maPhong INTEGER NOT NULL, thang TEXT NOT NULL, tienPhong REAL, chiSoDienCu INTEGER, chiSoDienMoi INTEGER, chiSoNuocCu INTEGER, chiSoNuocMoi INTEGER, tienDien REAL, tienNuoc REAL, tongTien REAL, trangThai TEXT, FOREIGN KEY (maPhong) REFERENCES PhongTro(maPhong));");
+
+        // 7. Bảng Chi Tiết Dịch Vụ Hóa Đơn (Mới)
+        db.execSQL("CREATE TABLE HoaDonChiTietDichVu (maHoaDon INTEGER, maDichVu INTEGER, tenDichVu TEXT, donGia REAL, PRIMARY KEY(maHoaDon, maDichVu));");
 
         // Chèn dữ liệu mẫu
         db.execSQL("INSERT INTO TaiKhoan(tenDangNhap, matKhau, hoTen) VALUES ('admin', '123456', 'Quản trị viên');");
@@ -200,11 +206,103 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // --- QUẢN LÝ HÓA ĐƠN ---
     public Cursor layDanhSachHoaDon() {
-        return getReadableDatabase().rawQuery("SELECT HoaDon.*, PhongTro.tenPhong FROM HoaDon JOIN PhongTro ON HoaDon.maPhong = PhongTro.maPhong ORDER BY maHoaDon DESC", null);
+        return getReadableDatabase().rawQuery(
+                "SELECT h.*, p.tenPhong, k.soDienThoai " +
+                        "FROM HoaDon h " +
+                        "JOIN PhongTro p ON h.maPhong = p.maPhong " +
+                        "LEFT JOIN HopDong hd ON p.maPhong = hd.maPhong AND hd.trangThai = 'Còn hiệu lực' " +
+                        "LEFT JOIN KhachThue k ON hd.maKhach = k.maKhach " +
+                        "ORDER BY h.maHoaDon DESC", null);
+    }
+
+    public boolean themHoaDon(int maPhong, String thang, double tPhong, int dCu, int dMoi, int nCu, int nMoi, double tDien, double tNuoc, double tong, String tt, List<DichVu> dsDichVu) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues v = new ContentValues();
+            v.put("maPhong", maPhong); v.put("thang", thang); v.put("tienPhong", tPhong);
+            v.put("chiSoDienCu", dCu); v.put("chiSoDienMoi", dMoi);
+            v.put("chiSoNuocCu", nCu); v.put("chiSoNuocMoi", nMoi);
+            v.put("tienDien", tDien); v.put("tienNuoc", tNuoc);
+            v.put("tongTien", tong); v.put("trangThai", tt);
+            long idHd = db.insert("HoaDon", null, v);
+
+            if (idHd != -1) {
+                for (DichVu dv : dsDichVu) {
+                    ContentValues vd = new ContentValues();
+                    vd.put("maHoaDon", idHd);
+                    vd.put("maDichVu", dv.getMaDichVu());
+                    vd.put("tenDichVu", dv.getTenDichVu());
+                    vd.put("donGia", dv.getDonGia());
+                    db.insert("HoaDonChiTietDichVu", null, vd);
+                }
+                db.setTransactionSuccessful();
+                return true;
+            }
+        } finally {
+            db.endTransaction();
+        }
+        return false;
+    }
+
+    public Cursor layDichVuCuaHoaDon(int maHd) {
+        return getReadableDatabase().rawQuery("SELECT * FROM HoaDonChiTietDichVu WHERE maHoaDon = ?", new String[]{String.valueOf(maHd)});
+    }
+
+    public boolean capNhatTrangThaiHoaDon(int id, String trangThai) {
+        ContentValues v = new ContentValues();
+        v.put("trangThai", trangThai);
+        return getWritableDatabase().update("HoaDon", v, "maHoaDon = ?", new String[]{String.valueOf(id)}) > 0;
     }
 
     public boolean xoaHoaDon(int id) {
         return getWritableDatabase().delete("HoaDon", "maHoaDon = ?", new String[]{String.valueOf(id)}) > 0;
+    }
+
+    public double layDonGiaDichVu(String ten) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT donGia FROM DichVu WHERE tenDichVu LIKE ?", new String[]{"%" + ten + "%"});
+        double gia = 0;
+        if (c.moveToFirst()) gia = c.getDouble(0);
+        c.close();
+        return gia;
+    }
+
+    public int layChiSoDienCu(int maPhong) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT chiSoDienMoi FROM HoaDon WHERE maPhong = ? ORDER BY maHoaDon DESC LIMIT 1", new String[]{String.valueOf(maPhong)});
+        int so = 0;
+        if (c.moveToFirst()) so = c.getInt(0);
+        c.close();
+        return so;
+    }
+
+    public int layChiSoNuocCu(int maPhong) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT chiSoNuocMoi FROM HoaDon WHERE maPhong = ? ORDER BY maHoaDon DESC LIMIT 1", new String[]{String.valueOf(maPhong)});
+        int so = 0;
+        if (c.moveToFirst()) so = c.getInt(0);
+        c.close();
+        return so;
+    }
+
+    public Cursor layPhongDaThueSpinner() {
+        return getReadableDatabase().rawQuery("SELECT maPhong, tenPhong, giaThue FROM PhongTro WHERE trangThai = 'Đã thuê'", null);
+    }
+
+    // --- THỐNG KÊ ---
+    public double layDoanhThuThang(String thang) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT SUM(tongTien) FROM HoaDon WHERE thang = ? AND trangThai = 'Đã thanh toán'", new String[]{thang});
+        double tong = 0;
+        if (c.moveToFirst()) tong = c.getDouble(0);
+        c.close();
+        return tong;
+    }
+
+    public Cursor layHoaDonNo() {
+        return getReadableDatabase().rawQuery(
+                "SELECT h.*, p.tenPhong FROM HoaDon h JOIN PhongTro p ON h.maPhong = p.maPhong WHERE h.trangThai = 'Chưa thanh toán'", null);
     }
 
     // --- QUẢN LÝ HỢP ĐỒNG ---

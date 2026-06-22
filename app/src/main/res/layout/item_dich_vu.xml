@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardItemDV"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_margin="8dp"
+    android:background="@android:color/white"
+    android:elevation="4dp">
+
+    <!-- HÀNG TRÊN: TÊN + ICON SỬA -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/txtTenDV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tên dịch vụ"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#000000" />
+
+        <ImageView
+            android:id="@+id/imgSuaDV"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_edit"
+            android:padding="4dp"/>
+    </LinearLayout>
+
+    <!-- GIÁ -->
+    <TextView
+        android:id="@+id/txtGiaDV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Giá: 0"
+        android:textColor="#2E7D32"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- ĐƠN VỊ -->
+    <TextView
+        android:id="@+id/txtDonViDV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đơn vị: "
+        android:textSize="14sp"
+        android:layout_marginTop="2dp"/>
+
+    <!-- GHI CHÚ -->
+    <TextView
+        android:id="@+id/txtGhiChuDV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ghi chú..."
+        android:textSize="13sp"
+        android:textColor="#666666"
+        android:layout_marginTop="2dp"/>
+</LinearLayout>
