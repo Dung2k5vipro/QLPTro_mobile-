@@ -31,11 +31,14 @@
             android:name=".activities.QuanLyKhachActivity"
             android:windowSoftInputMode="adjustPan"
             android:exported="false" />
+        <activity
+            android:name=".activities.QuanLyDichVuActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
 
+        <activity android:name=".activities.QuanLyHoaDonActivity" android:exported="false" />
+        <activity android:name=".activities.BaoCaoActivity" android:exported="false" />
         <activity android:name=".activities.QuanLyHopDongActivity" android:exported="false" />
-<!--        <activity android:name=".activities.QuanLyDichVuActivity" android:exported="false" />-->
-<!--        <activity android:name=".activities.QuanLyHoaDonActivity" android:exported="false" />-->
-<!--        <activity android:name=".activities.BaoCaoActivity" android:exported="false" />-->
 
     </application>
 
