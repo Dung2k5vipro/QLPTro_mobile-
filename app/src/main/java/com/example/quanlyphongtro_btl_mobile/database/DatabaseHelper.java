@@ -245,6 +245,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    public boolean kiemTraHoaDonTonTai(int maPhong, String thang) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM HoaDon WHERE maPhong = ? AND thang = ?", new String[]{String.valueOf(maPhong), thang});
+        boolean exists = c.getCount() > 0;
+        c.close();
+        return exists;
+    }
+
     public Cursor layDichVuCuaHoaDon(int maHd) {
         return getReadableDatabase().rawQuery("SELECT * FROM HoaDonChiTietDichVu WHERE maHoaDon = ?", new String[]{String.valueOf(maHd)});
     }
@@ -291,9 +299,96 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // --- THỐNG KÊ ---
+    // --- CÁC HÀM THỐNG KÊ MỚI CHO TRANG CHỦ ---
+    public int getCountPhong() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM PhongTro", null);
+        int count = 0;
+        if (c.moveToFirst()) count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
+    public int getCountPhongDaThue() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM PhongTro WHERE trangThai = 'Đã thuê'", null);
+        int count = 0;
+        if (c.moveToFirst()) count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
+    public int getCountKhachThue() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM KhachThue", null);
+        int count = 0;
+        if (c.moveToFirst()) count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
+    public int getCountHopDong() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM HopDong WHERE trangThai = 'Còn hiệu lực'", null);
+        int count = 0;
+        if (c.moveToFirst()) count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
+    public int getCountHoaDon() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM HoaDon", null);
+        int count = 0;
+        if (c.moveToFirst()) count = c.getInt(0);
+        c.close();
+        return count;
+    }
+
+    public double[] getThongKeNo() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(*), SUM(tongTien) FROM HoaDon WHERE trangThai = 'Chưa thanh toán'", null);
+        double[] result = new double[2]; // [0] là số lượng, [1] là tổng tiền
+        if (c.moveToFirst()) {
+            result[0] = c.getDouble(0);
+            result[1] = c.getDouble(1);
+        }
+        c.close();
+        return result;
+    }
+
     public double layDoanhThuThang(String thang) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT SUM(tongTien) FROM HoaDon WHERE thang = ? AND trangThai = 'Đã thanh toán'", new String[]{thang});
+        double tong = 0;
+        if (c.moveToFirst()) tong = c.getDouble(0);
+        c.close();
+        return tong;
+    }
+
+    public double layDoanhThuNam(String nam) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT SUM(tongTien) FROM HoaDon WHERE thang LIKE ? AND trangThai = 'Đã thanh toán'", new String[]{"%/" + nam});
+        double tong = 0;
+        if (c.moveToFirst()) tong = c.getDouble(0);
+        c.close();
+        return tong;
+    }
+
+    public double layDoanhThuQuy(int quy, String nam) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String months = "";
+        if (quy == 1) months = "('01/" + nam + "', '02/" + nam + "', '03/" + nam + "')";
+        else if (quy == 2) months = "('04/" + nam + "', '05/" + nam + "', '06/" + nam + "')";
+        else if (quy == 3) months = "('07/" + nam + "', '08/" + nam + "', '09/" + nam + "')";
+        else months = "('10/" + nam + "', '11/" + nam + "', '12/" + nam + "')";
+
+        Cursor c = db.rawQuery(
+                "SELECT SUM(tongTien) FROM HoaDon " +
+                        "WHERE thang IN (" + months + ") " +
+                        "AND trangThai = 'Đã thanh toán'",
+                null
+        );
         double tong = 0;
         if (c.moveToFirst()) tong = c.getDouble(0);
         c.close();

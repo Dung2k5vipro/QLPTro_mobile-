@@ -56,6 +56,11 @@ public class QuanLyHoaDonActivity extends BaseMenuActivity {
         anhXa();
         taiDanhSachHoaDon();
         xuLySuKien();
+
+        // Kiểm tra xem có yêu cầu lọc nợ từ màn hình khác không
+        if (getIntent().getBooleanExtra("FILTER_NO", false)) {
+            btnFilterNo.performClick();
+        }
     }
 
     private void anhXa() {
@@ -223,6 +228,13 @@ public class QuanLyHoaDonActivity extends BaseMenuActivity {
         int maPhong = listIdPhong.get(spnPhong.getSelectedItemPosition());
         double tPhong = listGiaPhong.get(spnPhong.getSelectedItemPosition());
         String thang = edtThang.getText().toString().trim();
+        
+        // Kiểm tra xem tháng này phòng này đã có hóa đơn chưa
+        if (dbHelper.kiemTraHoaDonTonTai(maPhong, thang)) {
+            Toast.makeText(this, "Phòng này đã lập hóa đơn cho tháng " + thang + " rồi!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         int dCu = dbHelper.layChiSoDienCu(maPhong);
         int nCu = dbHelper.layChiSoNuocCu(maPhong);
         
