@@ -63,7 +63,7 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Uri selectedImageUri = result.getData().getData();
-                    // Cấp quyền đọc lâu dài cho Uri (quan trọng khi lưu vào DB)
+                    // Cấp quyền đọc
                     getContentResolver().takePersistableUriPermission(selectedImageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     
                     if (isChonAnhTruoc) {
@@ -119,10 +119,9 @@ public class QuanLyKhachActivity extends BaseMenuActivity {
         btnFormLuuKhach.setOnClickListener(v -> xuLyLuuDuLieuKhach());
         btnFormXoaKhach.setOnClickListener(v -> xuLyXoaKhachThue());
 
-        // SỰ KIỆN NHẤN GIỮ VÀO ITEM ĐỂ XEM CHI TIẾT
-        lvKhachThue.setOnItemLongClickListener((parent, view, position, id) -> {
-            hienThiChiTietKhach(danhSachHienThiKhach.get(position));
-            return true;
+        // SỰ KIỆN NHẤN VÀO ITEM ĐỂ CHỈNH SỬA
+        lvKhachThue.setOnItemClickListener((parent, view, position, id) -> {
+            hienThiFormSua(danhSachHienThiKhach.get(position));
         });
 
         edtTimKiemKhach.addTextChangedListener(new TextWatcher() {

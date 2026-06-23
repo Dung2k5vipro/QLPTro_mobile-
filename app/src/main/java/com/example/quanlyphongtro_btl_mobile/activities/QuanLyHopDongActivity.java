@@ -98,6 +98,40 @@ public class QuanLyHopDongActivity extends BaseMenuActivity {
         btnFilterTatCa.setOnClickListener(v -> locHd("Tất cả", btnFilterTatCa));
         btnFilterConHieuLuc.setOnClickListener(v -> locHd("Còn hiệu lực", btnFilterConHieuLuc));
         btnFilterHetHan.setOnClickListener(v -> locHd("Hết hạn", btnFilterHetHan));
+
+        // SỰ KIỆN CLICK VÀO ITEM ĐỂ SỬA
+        lvHopDong.setOnItemClickListener((parent, view, position, id) -> {
+            if (adapterHd != null) {
+                HopDong hd = danhSachHienThiHd.get(position);
+                moFormSuaHopDong(hd);
+            }
+        });
+    }
+
+    private void moFormSuaHopDong(HopDong hd) {
+        laHanhDongThemMoi = false;
+        hdDangChonSua = hd;
+        txtTieuDeFormHd.setText("Chi tiết hợp đồng");
+        btnFormXoaHd.setVisibility(View.VISIBLE);
+        btnFormInHd.setVisibility(View.VISIBLE);
+
+        napDuLieuSpinner(false); // Khi sửa phải nạp tất cả phòng để hiển thị phòng đang thuê hiện tại
+
+        edtFormNgayBatDau.setText(hd.getNgayBatDau());
+        edtFormNgayKetThuc.setText(hd.getNgayKetThuc());
+        edtFormTienCoc.setText(String.valueOf((int) hd.getTienCoc()));
+        edtFormDieuKhoan.setText(hd.getDieuKhoan());
+
+        // Trỏ Spinner về đúng Khách và Phòng cũ
+        int idxKhach = listIdKhach.indexOf(hd.getMaKhach());
+        if (idxKhach != -1) spFormKhachHd.setSelection(idxKhach);
+        int idxPhong = listIdPhong.indexOf(hd.getMaPhong());
+        if (idxPhong != -1) spFormPhongHd.setSelection(idxPhong);
+
+        if (hd.getTrangThai().equals("Còn hiệu lực")) spFormTrangThaiHd.setSelection(0);
+        else spFormTrangThaiHd.setSelection(1);
+
+        layoutFormHd.setVisibility(View.VISIBLE);
     }
 
     private void anhXaGiaoDienHd() {
@@ -190,29 +224,7 @@ public class QuanLyHopDongActivity extends BaseMenuActivity {
         adapterHd = new HopDongAdapter(this, danhSachHienThiHd, new HopDongAdapter.OnHopDongActionListener() {
             @Override
             public void onSua(HopDong hd) {
-                laHanhDongThemMoi = false;
-                hdDangChonSua = hd;
-                txtTieuDeFormHd.setText("Chi tiết hợp đồng");
-                btnFormXoaHd.setVisibility(View.VISIBLE);
-                btnFormInHd.setVisibility(View.VISIBLE);
-
-                napDuLieuSpinner(false); // Khi sửa phải nạp tất cả phòng để hiển thị phòng đang thuê hiện tại
-
-                edtFormNgayBatDau.setText(hd.getNgayBatDau());
-                edtFormNgayKetThuc.setText(hd.getNgayKetThuc());
-                edtFormTienCoc.setText(String.valueOf((int)hd.getTienCoc()));
-                edtFormDieuKhoan.setText(hd.getDieuKhoan());
-
-                // Trỏ Spinner về đúng Khách và Phòng cũ
-                int idxKhach = listIdKhach.indexOf(hd.getMaKhach());
-                if (idxKhach != -1) spFormKhachHd.setSelection(idxKhach);
-                int idxPhong = listIdPhong.indexOf(hd.getMaPhong());
-                if (idxPhong != -1) spFormPhongHd.setSelection(idxPhong);
-
-                if (hd.getTrangThai().equals("Còn hiệu lực")) spFormTrangThaiHd.setSelection(0);
-                else spFormTrangThaiHd.setSelection(1);
-
-                layoutFormHd.setVisibility(View.VISIBLE);
+                moFormSuaHopDong(hd);
             }
 
             @Override public void onXoa(HopDong hd) { hdDangChonSua = hd; xuLyXoaHdCucBo(); }
@@ -224,6 +236,8 @@ public class QuanLyHopDongActivity extends BaseMenuActivity {
         });
         lvHopDong.setAdapter(adapterHd);
     }
+
+
 
     private void xuLyLuuHdCucBo() {
         if (spFormKhachHd.getSelectedItem() == null || spFormPhongHd.getSelectedItem() == null) {

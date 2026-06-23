@@ -79,10 +79,10 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri uri = result.getData().getData();
                         if (uri != null) {
-                            // Cấp quyền đọc vĩnh viễn để ảnh không bị mất khi reset app
+                            // Cấp quyền đọc
                             getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             uriHinhAnhDuocChon = uri.toString();
-                            imgFormPreview.setImageURI(uri); // Hiển thị ảnh xem trước
+                            imgFormPreview.setImageURI(uri); // Hiển thị ảnh xem
                         }
                     }
                 }
@@ -90,7 +90,7 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
 
         taiDuLieuPhongTro();
 
-        // SỰ KIỆN: BẤM NÚT CHỌN ẢNH TỪ MÁY
+
         btnFormChonAnh.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -98,7 +98,7 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
             thuThapHinhAnh.launch(intent);
         });
 
-        // 1. SỰ KIỆN KHI BẤM NÚT THÊM (+)
+
         fabThemPhong.setOnClickListener(v -> {
             laHanhDongThemMoi = true;
             phongDangChonSua = null;
@@ -117,8 +117,8 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
             layoutFormChucNang.setVisibility(View.VISIBLE);
         });
 
-        // 2. SỰ KIỆN KHI NHẤN GIỮ ĐỂ SỬA / XÓA
-        lvPhongTro.setOnItemLongClickListener((parent, view, position, id) -> {
+
+        lvPhongTro.setOnItemClickListener((parent, view, position, id) -> {
             laHanhDongThemMoi = false;
             phongDangChonSua = danhSachHienThiPhongTro.get(position);
 
@@ -127,7 +127,7 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
 
             // Đổ dữ liệu cũ vào form
             edtFormTenPhong.setText(phongDangChonSua.getTenPhong());
-            
+
             // Set Spinner trạng thái
             if (phongDangChonSua.getTrangThai().equals("Đã thuê")) {
                 spnFormTrangThai.setSelection(1);
@@ -139,7 +139,7 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
             edtFormDienTich.setText(String.valueOf(phongDangChonSua.getDienTich()));
             edtFormGhiChu.setText(phongDangChonSua.getGhiChu());
 
-            // Load lại ảnh cũ (nếu có)
+            // Load lại ảnh cũ
             uriHinhAnhDuocChon = phongDangChonSua.getHinhAnh();
             if (uriHinhAnhDuocChon != null && !uriHinhAnhDuocChon.isEmpty()) {
                 try {
@@ -152,20 +152,19 @@ public class QuanLyPhongActivity extends BaseMenuActivity {
             }
 
             layoutFormChucNang.setVisibility(View.VISIBLE);
-            return true;
         });
 
-        // 3. SỰ KIỆN NÚT HỦY / ĐÓNG FORM
+
         btnFormHuy.setOnClickListener(v -> dongFormChucNang());
         btnFormDong.setOnClickListener(v -> dongFormChucNang());
 
-        // 4. SỰ KIỆN NÚT XÁC NHẬN LƯU (Xử lý thông minh rẽ nhánh Thêm hoặc Sửa)
+
         btnFormLuu.setOnClickListener(v -> xuLyNutXacNhanLuu());
 
-        // 5. SỰ KIỆN NÚT XÓA PHÒNG
+
         btnFormXoa.setOnClickListener(v -> xuLyXoaPhongCucBo());
 
-        // Tìm kiếm và bộ lọc nhanh
+        // Tìm kiếm và bộ lọc
         edtTimKiem.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { xuLyTimKiemPhongTro(s.toString()); }
