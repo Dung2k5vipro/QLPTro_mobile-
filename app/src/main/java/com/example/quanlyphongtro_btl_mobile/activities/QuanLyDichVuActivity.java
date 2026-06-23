@@ -151,7 +151,12 @@ public class QuanLyDichVuActivity extends BaseMenuActivity {
     private void themMoi() {
         if (!validate()) return;
 
-        String ten = edtTen.getText().toString();
+        String ten = edtTen.getText().toString().trim();
+        if (dbHelper.kiemTraTenDichVuTonTai(ten)) {
+            toast("Tên dịch vụ này đã tồn tại!");
+            return;
+        }
+
         double gia = parseDouble(edtGia.getText().toString());
         String donVi = edtDonVi.getText().toString();
         String ghiChu = edtGhiChu.getText().toString();
@@ -171,7 +176,12 @@ public class QuanLyDichVuActivity extends BaseMenuActivity {
         if (!validate()) return;
 
         int id = dichVuDangChon.getMaDichVu();
-        String ten = edtTen.getText().toString();
+        String ten = edtTen.getText().toString().trim();
+        if (dbHelper.kiemTraTenDichVuTonTai(ten, id)) {
+            toast("Tên dịch vụ này đã tồn tại!");
+            return;
+        }
+
         double gia = parseDouble(edtGia.getText().toString());
         String donVi = edtDonVi.getText().toString();
         String ghiChu = edtGhiChu.getText().toString();

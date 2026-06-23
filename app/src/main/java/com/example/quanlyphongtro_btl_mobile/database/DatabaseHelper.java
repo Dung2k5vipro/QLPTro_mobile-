@@ -204,6 +204,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().delete("DichVu", "maDichVu = ?", new String[]{String.valueOf(id)}) > 0;
     }
 
+    public boolean kiemTraTenDichVuTonTai(String ten) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM DichVu WHERE tenDichVu = ?", new String[]{ten});
+        boolean exists = c.getCount() > 0;
+        c.close();
+        return exists;
+    }
+
+    public boolean kiemTraTenDichVuTonTai(String ten, int excludeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM DichVu WHERE tenDichVu = ? AND maDichVu != ?", new String[]{ten, String.valueOf(excludeId)});
+        boolean exists = c.getCount() > 0;
+        c.close();
+        return exists;
+    }
+
     // --- QUẢN LÝ HÓA ĐƠN ---
     public Cursor layDanhSachHoaDon() {
         return getReadableDatabase().rawQuery(
