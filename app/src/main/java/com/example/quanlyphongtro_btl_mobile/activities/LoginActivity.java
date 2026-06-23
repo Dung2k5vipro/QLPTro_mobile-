@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                             .apply();
 
                     // Chuyển sang màn hình Quản lý hợp đồng
-                    Intent intent = new Intent(LoginActivity.this, QuanLyHopDongActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, BaoCaoActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
